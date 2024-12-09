@@ -22,3 +22,7 @@ vim.api.nvim_create_user_command('NxProjectName', function()
     vim.print(name)
 end, { desc = 'Copy NX Project Name' })
 ```
+
+## Dependencies
+
+This plugin requires `jq` to parse the project.json
