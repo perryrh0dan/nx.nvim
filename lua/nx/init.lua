@@ -28,7 +28,11 @@ local function find_file(directory)
 
     if directory ~= '/' then
         local parent = get_parent_dir(directory)
-        return find_file(parent)
+        if parent ~= nil then
+            return find_file(parent)
+        else
+            return nil
+        end
     else
         return nil
     end
