@@ -38,15 +38,23 @@ local function find_file(directory)
     end
 end
 
-local function read_file(file)
+local function read_file(file, path)
     local i, t, popen = 0, {}, io.popen
-    local pfile = popen('cat  "' .. file .. '" | jq -r ".name" | head -n 1')
-    local result = ""
+    local pfile = popen('cat  "' .. file .. '" | jq -r "' .. path .. '"')
+    local result = {}
     for line in pfile:lines() do
-        result = line
+        table.insert(result, line)
     end
 
     return result
+end
+
+local function select_option(prompt, options)
+    return coroutine.wrap(function()
+        vim.ui.select(options, { prompt = prompt }, function(choice)
+            coroutine.yield(choice)
+        end)
+    end)()
 end
 
 M.projectName = function(path)
@@ -57,9 +65,24 @@ M.projectName = function(path)
         return nil
     end
 
-    local name = read_file(file)
+    local result = read_file(file, '.name')
 
-    return name
+    return result[1]
+end
+
+M.projectTarget = function(path)
+    local parentDir = get_parent_dir(path)
+    vim.print(path)
+
+    local file = find_file(parentDir)
+    if file == nil then
+        return nil
+    end
+    local name = read_file(file, '.name')[1]
+    local options = read_file(file, '.targets | keys | .[]')
+
+    local target = select_option('Select target:', options)
+    return name .. ":" .. target
 end
 
 return M
