@@ -10,9 +10,9 @@ require('lazy').setup({
 })
 ```
 
-### Keymaps
+### Usage
 
-Get the project name of the current open file
+Copy the project name of the current open file
 
 ```lua
 vim.api.nvim_create_user_command('NxProjectName', function()
@@ -20,17 +20,21 @@ vim.api.nvim_create_user_command('NxProjectName', function()
     local name = require('custom.utils.nx').projectName(filepath)
     vim.fn.setreg('+', name) -- write to clippoard
     vim.print(name)
-end, { desc = 'Copy NX Project Name' })
+end, { desc = 'Copy NX project name' })
 ```
+
+Select and copy a target for the current project to paste it directly into the terminal
 
 ```lua
 vim.api.nvim_create_user_command('NxProjectTarget', function()
     local filepath = vim.fn.expand('%')
     local target = require('nx').projectTarget(filepath)
     if target ~= nil then
-        vim.fn.setreg('+', target) -- write to clippoard
+        local command = 'npx nx run ' .. target
+        vim.fn.setreg('+', command) -- write to clippoard
+        -- Without vim.schedule the select will not be properly "closed" and is still visible on the screen
         vim.schedule(function()
-            vim.notify(target)
+            vim.notify(command)
         end)
     end
 end, { desc = 'Select and copy NX project target' })
