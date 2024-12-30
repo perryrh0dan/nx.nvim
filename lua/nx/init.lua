@@ -8,6 +8,9 @@ local get_parent_dir = function(path)
 end
 
 local scandir = function(directory)
+    if directory == nil then
+        return {}
+    end
     local i, t, popen = 0, {}, io.popen
     local pfile = popen('ls -a "' .. directory .. '"')
     for filename in pfile:lines() do
@@ -57,7 +60,7 @@ local function select_option(prompt, options)
     end)()
 end
 
-M.projectName = function(path)
+M.project_name = function(path)
     local parentDir = get_parent_dir(path)
 
     local file = find_file(parentDir)
@@ -70,9 +73,8 @@ M.projectName = function(path)
     return result[1]
 end
 
-M.projectTarget = function(path)
+M.project_target = function(path)
     local parentDir = get_parent_dir(path)
-    vim.print(path)
 
     local file = find_file(parentDir)
     if file == nil then

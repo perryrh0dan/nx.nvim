@@ -17,7 +17,7 @@ Copy the project name of the current open file
 ```lua
 vim.api.nvim_create_user_command('NxProjectName', function()
     local filepath = vim.fn.expand('%')
-    local name = require('custom.utils.nx').projectName(filepath)
+    local name = require('custom.utils.nx').project_name(filepath)
     vim.fn.setreg('+', name) -- write to clippoard
     vim.print(name)
 end, { desc = 'Copy NX project name' })
@@ -28,7 +28,7 @@ Select and copy a target for the current project to paste it directly into the t
 ```lua
 vim.api.nvim_create_user_command('NxProjectTarget', function()
     local filepath = vim.fn.expand('%')
-    local target = require('nx').projectTarget(filepath)
+    local target = require('nx').project_target(filepath)
     if target ~= nil then
         local command = 'npx nx run ' .. target
         vim.fn.setreg('+', command) -- write to clippoard

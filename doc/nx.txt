@@ -1,0 +1,16 @@
+==============================================================================
+                                                                     *nx.nvim*
+
+nx.project_name({filepath})                                  *nx.project_name*
+
+    Return the name of the project where {filepath} is located in. If no
+    project could be found it will return `nil`.
+
+nx.project_target({filepath})                              *nx.project_target*
+
+    Open `vim.ui.select` with a list of all project targets the provided
+    {filepath} is inside.
+    Return the selected name and target `project:target`.
+    If no project could be found `nil` is returned.
+
+vim:tw=78:ts=8:ft=help:norl:
