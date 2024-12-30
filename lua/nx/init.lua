@@ -12,7 +12,7 @@ local scandir = function(directory)
         return {}
     end
     local i, t, popen = 0, {}, io.popen
-    local pfile = popen('ls -a "' .. directory .. '"')
+    local pfile, error = popen('ls -a "' .. directory .. '" 2>/dev/null')
     for filename in pfile:lines() do
         i = i + 1
         t[i] = filename
