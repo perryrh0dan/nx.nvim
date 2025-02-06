@@ -84,6 +84,9 @@ M.project_target = function(path)
     local options = read_file(file, '.targets | keys | .[]')
 
     local target = select_option('Select target:', options)
+    if target == nil then
+        return nil
+    end
     return name .. ":" .. target
 end
 
