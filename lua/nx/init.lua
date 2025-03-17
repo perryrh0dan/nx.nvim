@@ -21,10 +21,10 @@ local scandir = function(directory)
     return t
 end
 
-local function find_file(directory)
+local function find_file(directory, filename)
     local files = scandir(directory)
     for _i, file in ipairs(files) do
-        if file == "project.json" then
+        if string.match(file, filename) then
             return directory .. file
         end
     end
@@ -32,7 +32,7 @@ local function find_file(directory)
     if directory ~= '/' then
         local parent = get_parent_dir(directory)
         if parent ~= nil then
-            return find_file(parent)
+            return find_file(parent, filename)
         else
             return nil
         end
@@ -63,7 +63,7 @@ end
 M.project_name = function(path)
     local parentDir = get_parent_dir(path)
 
-    local file = find_file(parentDir)
+    local file = find_file(parentDir, "project.json")
     if file == nil then
         return nil
     end
@@ -76,7 +76,7 @@ end
 M.project_target = function(path)
     local parentDir = get_parent_dir(path)
 
-    local file = find_file(parentDir)
+    local file = find_file(parentDir, "project.json")
     if file == nil then
         return nil
     end
@@ -88,6 +88,22 @@ M.project_target = function(path)
         return nil
     end
     return name .. ":" .. target
+end
+
+M.workspace_generator = function(path)
+    local parentDir = get_parent_dir(path)
+
+    local file = find_file(parentDir, "nx.json")
+    if file == nil then
+        return nil
+    end
+
+    local generators = read_file(file, '.generators | keys | .[]')
+    local generator = select_option('Select generator:', generators)
+    if generator == nil then
+        return nil
+    end
+    return generator
 end
 
 return M
