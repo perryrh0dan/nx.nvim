@@ -1,8 +1,16 @@
 local M = {}
 
 local get_parent_dir = function(path)
+    if path == './' then
+        return nil
+    end
+
     path = path:gsub("/$", "")
     local t = path:match(".*/")
+
+    if t == nil then
+        return './'
+    end
 
     return t
 end
